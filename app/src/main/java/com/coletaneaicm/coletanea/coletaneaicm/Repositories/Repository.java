@@ -62,6 +62,17 @@ public class Repository extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public void criar(Object tipo, ArrayList<Object> item) {
+
+        if (tipo instanceof Colecoes) {
+            this.criarColecao(item);
+        } else if (tipo instanceof Categorias) {
+            this.criarCategoria(item);
+        } else {
+            this.criarMusica(item);
+        }
+
+    }
 
     public List<Colecoes> getColecoes() {
 
