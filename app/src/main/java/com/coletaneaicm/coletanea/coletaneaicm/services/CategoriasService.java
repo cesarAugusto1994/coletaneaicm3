@@ -15,4 +15,7 @@ public interface CategoriasService {
 
     @GET("collection/{id}")
     Call<List<Categorias>> getCategorias(@Path("id") int id);
+
+    @GET("categories")
+    Call<List<Categorias>> getAll();
 }

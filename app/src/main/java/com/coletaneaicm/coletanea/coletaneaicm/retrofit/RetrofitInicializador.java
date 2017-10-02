@@ -2,6 +2,8 @@ package com.coletaneaicm.coletanea.coletaneaicm.retrofit;
 
 import com.coletaneaicm.coletanea.coletaneaicm.services.CategoriasService;
 import com.coletaneaicm.coletanea.coletaneaicm.services.ColecoesService;
+import com.coletaneaicm.coletanea.coletaneaicm.services.FavoritosService;
+import com.coletaneaicm.coletanea.coletaneaicm.services.LoginService;
 import com.coletaneaicm.coletanea.coletaneaicm.services.MusicaService;
 import com.coletaneaicm.coletanea.coletaneaicm.services.MusicasService;
 
@@ -37,5 +39,12 @@ public class RetrofitInicializador {
         return retrofit.create(MusicaService.class);
     }
 
+    public LoginService LoginService() {
+        return retrofit.create(LoginService.class);
+    }
+
+    public FavoritosService FavoritosService() {
+        return retrofit.create(FavoritosService.class);
+    }
 
 }

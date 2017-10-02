@@ -24,6 +24,7 @@ import com.coletaneaicm.coletanea.coletaneaicm.Entities.Categorias;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Colecoes;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musica;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musicas;
+import com.coletaneaicm.coletanea.coletaneaicm.Remotes.ImportData;
 import com.coletaneaicm.coletanea.coletaneaicm.Repositories.Repository;
 import com.coletaneaicm.coletanea.coletaneaicm.retrofit.RetrofitInicializador;
 
@@ -114,6 +115,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
+            ImportData importData = new ImportData(this);
+            importData.run();
+
+            /*
             final Repository repository = new Repository(this);
 
             ArrayList<Colecoes> colecoes = (ArrayList<Colecoes>) repository.getColecoes();
@@ -192,9 +197,7 @@ public class MainActivity extends AppCompatActivity
 
                                 }
 
-                            }
-                            */
-
+                            }                       
                         }
 
                         @Override
@@ -207,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                 ArrayList<Categorias> categoriasList = (ArrayList<Categorias>) repository.getCategorias(colecoes.get(i));
 
                 Log.i("onResponse", " " + categoriasList.size());
-/*
+
                 for (int i2 = 0; i2 < categoriasList.size(); i2++) {
 
                     ArrayList<Musicas> musicas = (ArrayList<Musicas>) repository.getMusicas(categoriasList.get(i2));
@@ -238,14 +241,14 @@ public class MainActivity extends AppCompatActivity
                         progressDialog.dismiss();
                     }
                 }
-                */
+                
             }
 
             progressDialog.dismiss();
 
             Toast.makeText(MainActivity.this, "Está tudo Atualizado ;)", Toast.LENGTH_SHORT).show();
 
-
+            */
         } else if (id == R.id.nav_send) {
 
         }

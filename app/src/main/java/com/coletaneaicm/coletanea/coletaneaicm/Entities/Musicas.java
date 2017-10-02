@@ -17,7 +17,9 @@ public class Musicas implements Serializable {
 
     public String numero;
 
-    public Categorias categoria;
+    public String tom;
+
+    public Integer Categoria;
 
     public void setId(Integer id) {
         this.id = id;
@@ -61,5 +63,13 @@ public class Musicas implements Serializable {
 
     public String toString() {
         return this.getNome();
+    }
+
+    public void setTom(String tom) {
+        this.tom = tom;
+    }
+
+    public String getTom() {
+        return tom;
     }
 }

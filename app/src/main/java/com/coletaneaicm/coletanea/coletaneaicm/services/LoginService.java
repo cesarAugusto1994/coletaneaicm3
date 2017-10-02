@@ -11,14 +11,9 @@ import retrofit2.http.Path;
 /**
  * Created by cesar on 28/09/17.
  */
-public interface MusicasService {
+public interface LoginService {
 
-    @GET("category/{id}")
-    Call<List<Musicas>> getMusicas(@Path("id") int id);
+    @GET("login/{email}/{password}")
+    Call<List<Login>> getUser(@Path("email") String email, @Path("password") String password);
 
-    @GET("praise/{id}")
-    public Call<Musicas> getMusica(@Path("id") int id);
-
-    @GET("praises")
-    public Call<Musicas> getAll();
 }

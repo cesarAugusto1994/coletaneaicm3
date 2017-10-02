@@ -11,14 +11,9 @@ import retrofit2.http.Path;
 /**
  * Created by cesar on 28/09/17.
  */
-public interface MusicasService {
+public interface FavoritosService {
 
-    @GET("category/{id}")
-    Call<List<Musicas>> getMusicas(@Path("id") int id);
+    @GET("/user/{id}/my-favorites")
+    Call<List<Favoritos>> getFavoritos(@Path("id") int id);
 
-    @GET("praise/{id}")
-    public Call<Musicas> getMusica(@Path("id") int id);
-
-    @GET("praises")
-    public Call<Musicas> getAll();
 }

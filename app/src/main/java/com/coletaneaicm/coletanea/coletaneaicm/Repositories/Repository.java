@@ -44,7 +44,7 @@ public class Repository extends SQLiteOpenHelper {
         db.execSQL(sql);
         String sql2 = "CREATE TABLE categorias (id INTEGER PRIMARY KEY, nome TEXT NOT NULL, colecao INT NULL, qtde_musicas TEXT NULL);";
         db.execSQL(sql2);
-        String sql3 = "CREATE TABLE musicas (id INTEGER PRIMARY KEY, nome TEXT NOT NULL, categoria INT NULL, letra TEXT NULL, numero TEXT NULL);";
+        String sql3 = "CREATE TABLE musicas (id INTEGER PRIMARY KEY, nome TEXT NOT NULL, categoria INT NULL, letra TEXT NULL, numero TEXT NULL, tom TEXT NULL);";
         db.execSQL(sql3);
     }
 
@@ -182,9 +182,7 @@ public class Repository extends SQLiteOpenHelper {
 
                 ContentValues valores = new ContentValues();
 
-                Log.i("onResponse", " Qtde " + categorias.get(i).getQtde_musicas());
-
-                valores.put("qtde_musicas", categorias.get(i).getQtde_musicas());
+                valores.put("id", categorias.get(i).getId());
                 valores.put("nome", categorias.get(i).getNome());
                 valores.put("colecao", categorias.get(i).getColecao().getId());
 
@@ -243,11 +241,10 @@ public class Repository extends SQLiteOpenHelper {
             Musicas musicas1 = new Musicas();
             musicas1.setId(c.getInt(c.getColumnIndex("id")));
             musicas1.setNome(c.getString(c.getColumnIndex("nome")));
-
-            Integer categoria1 = c.getInt(c.getColumnIndex("categoria"));
-            categoria = this.getCategoria(categoria1);
-
-            musicas1.setCategoria(categoria);
+            musicas1.setNumero(c.getString(c.getColumnIndex("numero")));
+            musicas1.setCategoria(c.getColumnIndex("categoria"));
+            musicas1.setLetra(c.getColumnIndex("letra"));
+            musicas1.setTom(c.getColumnIndex("tom"));
             musicas.add(musicas1);
         }
 
@@ -270,10 +267,10 @@ public class Repository extends SQLiteOpenHelper {
 
                 Log.i("criarMusica", "Sucesso "  + musicas.get(i).getNome());
 
-                //valores.put("id", musicas.get(i).getId());
+                valores.put("id", musicas.get(i).getId());
                 valores.put("nome", musicas.get(i).getNome());
-                valores.put("categoria", musicas.get(i).getCategoria().getId());
-
+                valores.put("categoria", musicas.get(i).getCategoria());
+                valores.put("tom", musicas.get(i).getTom());
                 valores.put("letra", musicas.get(i).getLetra());
                 valores.put("numero", musicas.get(i).getNumero());
 
@@ -287,29 +284,27 @@ public class Repository extends SQLiteOpenHelper {
 
     }
 
-    public Musicas getMusica(Musicas id) throws Exception {
+    public Musicas getMusica(Musicas id) {
 
         List<Musicas> musicas = new ArrayList<Musicas>();
 
         Cursor c = db.rawQuery("Select * from musicas where id = ? ", new String[] {String.valueOf(id)});
 
         while(c.moveToNext()) {
-            Musicas musica = new Musicas();
-            musica.setId(c.getInt(c.getColumnIndex("id")));
-            musica.setNome(c.getString(c.getColumnIndex("nome")));
-
-            Integer categoria = c.getInt(c.getColumnIndex("colecao"));
-            Categorias categoria1 = this.getCategoria(categoria);
-
-            musica.setCategoria(categoria1);
-
-            musicas.add(musica);
+            Musicas musicas1 = new Musicas();
+            musicas1.setId(c.getInt(c.getColumnIndex("id")));
+            musicas1.setNome(c.getString(c.getColumnIndex("nome")));
+            musicas1.setNumero(c.getString(c.getColumnIndex("numero")));
+            musicas1.setCategoria(c.getColumnIndex("categoria"));
+            musicas1.setLetra(c.getColumnIndex("letra"));
+            musicas1.setTom(c.getColumnIndex("tom"));
+            musicas.add(musicas1);
         }
 
         c.close();
 
         if (musicas.isEmpty()) {
-            throw new Exception("Musica Não Encotrada.");
+            return Void;
         }
 
         return musicas.get(0);
