@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity
                             repository.criarCategoria(categorias);
 
                             Log.i("onResponse", " Sucesso ao Salvar Categorias");
-
+/*
                             for (int i = 0; i < categorias.size(); i++) {
 
                                 ArrayList<Musicas> musicas = (ArrayList<Musicas>) repository.getMusicas(categorias.get(i));
@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity
                                 }
 
                             }
+                            */
 
                         }
 
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity
                 ArrayList<Categorias> categoriasList = (ArrayList<Categorias>) repository.getCategorias(colecoes.get(i));
 
                 Log.i("onResponse", " " + categoriasList.size());
-
+/*
                 for (int i2 = 0; i2 < categoriasList.size(); i2++) {
 
                     ArrayList<Musicas> musicas = (ArrayList<Musicas>) repository.getMusicas(categoriasList.get(i2));
@@ -237,6 +238,7 @@ public class MainActivity extends AppCompatActivity
                         progressDialog.dismiss();
                     }
                 }
+                */
             }
 
             progressDialog.dismiss();

@@ -13,6 +13,8 @@ public class Categorias implements Serializable {
 
     private Colecoes colecao;
 
+    private Integer qtde_musicas;
+
     public String getNome() {
         return nome;
     }
@@ -39,5 +41,13 @@ public class Categorias implements Serializable {
 
     public Colecoes getColecao() {
         return colecao;
+    }
+
+    public Integer getQtde_musicas() {
+        return qtde_musicas;
+    }
+
+    public void setQtde_musicas(Integer qtde_musicas) {
+        this.qtde_musicas = qtde_musicas;
     }
 }

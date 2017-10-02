@@ -23,7 +23,7 @@ public class Repository extends SQLiteOpenHelper {
     private Context context;
 
     public Repository(Context context) {
-        super(context, "Coletanea", null, 1);
+        super(context, "Coletanea", null, 2);
         this.context = context;
         this.db = getReadableDatabase();
     }
@@ -42,7 +42,7 @@ public class Repository extends SQLiteOpenHelper {
 
         String sql = "CREATE TABLE colecoes (id INTEGER PRIMARY KEY, nome TEXT NOT NULL);";
         db.execSQL(sql);
-        String sql2 = "CREATE TABLE categorias (id INTEGER PRIMARY KEY, nome TEXT NOT NULL, colecao INT NULL);";
+        String sql2 = "CREATE TABLE categorias (id INTEGER PRIMARY KEY, nome TEXT NOT NULL, colecao INT NULL, qtde_musicas TEXT NULL);";
         db.execSQL(sql2);
         String sql3 = "CREATE TABLE musicas (id INTEGER PRIMARY KEY, nome TEXT NOT NULL, categoria INT NULL, letra TEXT NULL, numero TEXT NULL);";
         db.execSQL(sql3);
@@ -60,18 +60,6 @@ public class Repository extends SQLiteOpenHelper {
         db.execSQL(sql_drop3);
 
         onCreate(db);
-    }
-
-    public void criar(Object tipo, ArrayList<Object> item) {
-
-        if (tipo instanceof Colecoes) {
-            this.criarColecao(item);
-        } else if (tipo instanceof Categorias) {
-            this.criarCategoria(item);
-        } else {
-            this.criarMusica(item);
-        }
-
     }
 
     public List<Colecoes> getColecoes() {
@@ -183,6 +171,7 @@ public class Repository extends SQLiteOpenHelper {
         return categorias;
     }
 
+
     public void criarCategoria(ArrayList<Categorias> categorias) {
 
         SQLiteDatabase db = getWritableDatabase();
@@ -193,7 +182,9 @@ public class Repository extends SQLiteOpenHelper {
 
                 ContentValues valores = new ContentValues();
 
-                //valores.put("id", categorias.get(i).getId());
+                Log.i("onResponse", " Qtde " + categorias.get(i).getQtde_musicas());
+
+                valores.put("qtde_musicas", categorias.get(i).getQtde_musicas());
                 valores.put("nome", categorias.get(i).getNome());
                 valores.put("colecao", categorias.get(i).getColecao().getId());
 
@@ -291,7 +282,7 @@ public class Repository extends SQLiteOpenHelper {
 
             db.close();
         } catch (Exception e) {
-            Log.e("onInsert", "Ocorreu um erro " + e.getMessage());
+            Log.e("onInsert", "Ocorreu um erro musicas " + e.getMessage());
         }
 
     }
