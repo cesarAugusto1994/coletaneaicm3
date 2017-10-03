@@ -30,8 +30,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.coletaneaicm.coletanea.coletaneaicm.Entities.Login;
+import com.coletaneaicm.coletanea.coletaneaicm.retrofit.RetrofitInicializador;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -190,8 +197,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+
+
+            Call<Login> call = new RetrofitInicializador().LoginService().getUser(email, password);
+
+            call.enqueue(new Callback() {
+                @Override
+                public void onResponse(Call call, Response response) {
+                    showProgress(false);
+
+                    response.body();
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
+                    showProgress(false);
+                }
+            });
+
+            //mAuthTask = new UserLoginTask(email, password);
+            //mAuthTask.execute((Void) null);
         }
     }
 

@@ -20,5 +20,5 @@ public interface MusicasService {
     public Call<Musicas> getMusica(@Path("id") int id);
 
     @GET("praises")
-    public Call<Musicas> getAll();
+    public Call<List<Musicas>> getAll();
 }

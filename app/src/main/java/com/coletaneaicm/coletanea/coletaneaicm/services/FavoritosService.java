@@ -1,5 +1,6 @@
 package com.coletaneaicm.coletanea.coletaneaicm.services;
 
+import com.coletaneaicm.coletanea.coletaneaicm.Entities.Favoritos;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musicas;
 
 import java.util.List;

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Coletanea ICM</string>
+    <string name="app_name">Coletânea ICM</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -19,6 +19,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="title_activity_colecoes">ColecoesActivity</string>
-    <string name="title_activity_categorias">CategoriasActivity</string>
+    <string name="title_activity_colecoes">Coleções</string>
+    <string name="title_activity_categorias">Categorias</string>
+    <string name="title_activity_musica">Louvores</string>
 </resources>

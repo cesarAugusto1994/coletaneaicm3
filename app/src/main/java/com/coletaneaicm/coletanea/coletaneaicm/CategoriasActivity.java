@@ -53,11 +53,11 @@ public class CategoriasActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    Intent goCategorias = new Intent(CategoriasActivity.this, CategoriasActivity.class);
+                    Intent goMusica = new Intent(CategoriasActivity.this, MusicaActivity.class);
                     Categorias categoria = (Categorias) adapterView.getItemAtPosition(i);
-                    goCategorias.putExtra("categoria", categoria);
+                    goMusica.putExtra("categoria", categoria);
 
-                    startActivity(goCategorias);
+                    startActivity(goMusica);
                 }
             });
         } else {
@@ -85,43 +85,13 @@ public class CategoriasActivity extends AppCompatActivity {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                                Intent goCategorias = new Intent(CategoriasActivity.this, CategoriasActivity.class);
+                                Intent goMusica = new Intent(CategoriasActivity.this, MusicaActivity.class);
                                 Categorias categoria = (Categorias) adapterView.getItemAtPosition(i);
-                                goCategorias.putExtra("categoria", categoria);
+                                goMusica.putExtra("categoria", categoria);
 
-                                //startActivity(goCategorias);
+                                startActivity(goMusica);
                             }
                         });
-/*
-                            for (int i = 0; i < categorias.size(); i++) {
-
-                                ArrayList<Musicas> musicas = (ArrayList<Musicas>) repository.getMusicas(categorias.get(i));
-
-                                if (musicas.isEmpty()) {
-
-                                    Call<List<Musicas>> callMusicas = new RetrofitInicializador().getMusicas().getMusicas(categorias.get(i).getId());
-
-                                    callMusicas.enqueue(new Callback<List<Musicas>>() {
-                                        @Override
-                                        public void onResponse(Call<List<Musicas>> call, Response<List<Musicas>> response) {
-
-                                            ArrayList<Musicas> musicas = (ArrayList<Musicas>) response.body();
-                                            repository.criarMusica(musicas);
-
-                                            Log.i("onResponse", " Sucesso ao Salvar Musicas");
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<List<Musicas>> call, Throwable t) {
-                                            Log.e("onFailure", " Erro ao Salvar Musicas: " + t.getMessage());
-                                        }
-                                    });
-
-                                }
-
-                            }
-                            */
-
                     }
 
                     @Override

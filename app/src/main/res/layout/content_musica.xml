@@ -9,12 +9,11 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.coletaneaicm.coletanea.coletaneaicm.ColecoesActivity"
-    tools:showIn="@layout/activity_colecoes"
-    android:background="@color/colorWhite">
+    tools:context=".MusicaActivity"
+    tools:showIn="@layout/activity_musica">
 
     <ListView
-        android:id="@+id/lista_colecoes"
+        android:id="@+id/lista_musicas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />

@@ -19,7 +19,7 @@ public class Musicas implements Serializable {
 
     public String tom;
 
-    public Integer Categoria;
+    public Integer categoria;
 
     public void setId(Integer id) {
         this.id = id;
@@ -45,11 +45,11 @@ public class Musicas implements Serializable {
         return id;
     }
 
-    public Categorias getCategoria() {
+    public Integer getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(Categorias categoria) {
+    public void setCategoria(Integer categoria) {
         this.categoria = categoria;
     }
 

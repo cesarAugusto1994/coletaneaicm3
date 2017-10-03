@@ -11,7 +11,7 @@ public class Categorias implements Serializable {
 
     private String nome;
 
-    private Colecoes colecao;
+    private Integer colecao;
 
     public String getNome() {
         return nome;
@@ -33,11 +33,11 @@ public class Categorias implements Serializable {
         return this.getNome();
     }
 
-    public void setColecao(Colecoes colecao) {
+    public void setColecao(Integer colecao) {
         this.colecao = colecao;
     }
 
-    public Colecoes getColecao() {
+    public Integer getColecao() {
         return colecao;
     }
 }

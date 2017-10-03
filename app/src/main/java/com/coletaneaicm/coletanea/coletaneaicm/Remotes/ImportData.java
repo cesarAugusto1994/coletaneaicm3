@@ -1,10 +1,12 @@
 package com.coletaneaicm.coletanea.coletaneaicm.Remotes;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Categorias;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Colecoes;
+import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musicas;
 import com.coletaneaicm.coletanea.coletaneaicm.Repositories.Repository;
 import com.coletaneaicm.coletanea.coletaneaicm.retrofit.RetrofitInicializador;
 import com.google.android.gms.appdatasearch.GetRecentContextCall;
@@ -22,7 +24,7 @@ public class ImportData {
     private Call<List<Categorias>> callCategorias;
     private Call<List<Musicas>> callMusicas;
     private ArrayList<Colecoes> colecoes;
-    final private Content contextClass;
+    final private Context contextClass;
 
     final private Repository repository;
     
@@ -48,7 +50,10 @@ public class ImportData {
 
     public void run() {
 
-        this.load.show();
+        final ProgressDialog progressDialog = new ProgressDialog(contextClass);
+        progressDialog.setMessage("Baixando do servidor...");
+        progressDialog.show();
+
 
         callColecoes.enqueue(new Callback<List<Colecoes>>() {
 
@@ -58,20 +63,20 @@ public class ImportData {
                 ArrayList<Colecoes> colecoes = (ArrayList<Colecoes>) response.body();
                 repository.criarColecao(colecoes);
 
-                this.load.dismiss();
+                progressDialog.dismiss();
 
                 Log.i("onResponse", " Sucesso ao Salvar Colecoes");
             }
 
             @Override
             public void onFailure(Call<List<Colecoes>> call, Throwable t) {
-                this.load.dismiss();
+                progressDialog.dismiss();
                 Log.e("onFailure", " Erro ao Salvar Colecoes: " + t.getMessage());
             }
 
         });
-
-        this.load.show();
+/*
+        load().show();
 
         callCategorias.enqueue(new Callback<List<Categorias>>() {
             
@@ -81,20 +86,20 @@ public class ImportData {
                 ArrayList<Categorias> categorias = (ArrayList<Categorias>) response.body();
                 repository.criarCategoria(categorias);
 
-                this.load.dismiss();
+                load().dismiss();
 
                 Log.i("onResponse", " Sucesso ao Salvar Categorias");
             }
 
             @Override
             public void onFailure(Call<List<Categorias>> call, Throwable t) {
-                this.load.dismiss();
+                load().dismiss();
                 Log.e("onFailure", " Erro ao Salvar Categorias: " + t.getMessage());
             }
 
         });
 
-        this.load.show();
+        load().show();
 
         callMusicas.enqueue(new Callback<List<Musicas>>() {
             
@@ -104,18 +109,18 @@ public class ImportData {
                 ArrayList<Musicas> musicas = (ArrayList<Musicas>) response.body();
                 repository.criarMusica(musicas);
 
-                this.load.dismiss();
+                load().dismiss();
 
                 Log.i("onResponse", " Sucesso ao Salvar Musicas");
             }
 
             @Override
             public void onFailure(Call<List<Musicas>> call, Throwable t) {
-                this.load.dismiss();
+                load().dismiss();
                 Log.e("onFailure", " Erro ao Salvar Musicas: " + t.getMessage());
             }
 
         });
-
+*/
     }
 }

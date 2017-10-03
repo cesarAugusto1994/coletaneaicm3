@@ -1,5 +1,6 @@
 package com.coletaneaicm.coletanea.coletaneaicm.services;
 
+import com.coletaneaicm.coletanea.coletaneaicm.Entities.Login;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musicas;
 
 import java.util.List;
@@ -14,6 +15,6 @@ import retrofit2.http.Path;
 public interface LoginService {
 
     @GET("login/{email}/{password}")
-    Call<List<Login>> getUser(@Path("email") String email, @Path("password") String password);
+    Call<Login> getUser(@Path("email") String email, @Path("password") String password);
 
 }

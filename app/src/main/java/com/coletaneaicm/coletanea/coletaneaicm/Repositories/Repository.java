@@ -23,7 +23,7 @@ public class Repository extends SQLiteOpenHelper {
     private Context context;
 
     public Repository(Context context) {
-        super(context, "Coletanea", null, 2);
+        super(context, "Coletanea", null, 3);
         this.context = context;
         this.db = getReadableDatabase();
     }
@@ -138,11 +138,7 @@ public class Repository extends SQLiteOpenHelper {
 
             categoria.setId(c.getInt(c.getColumnIndex("id")));
             categoria.setNome(c.getString(c.getColumnIndex("nome")));
-
-            Integer colecao1 = c.getInt(c.getColumnIndex("colecao"));
-            colecao = this.getColecao(colecao1);
-
-            categoria.setColecao(colecao);
+            categoria.setColecao(c.getInt(c.getColumnIndex("colecao")));
             categorias.add(categoria);
         }
 
@@ -184,7 +180,7 @@ public class Repository extends SQLiteOpenHelper {
 
                 valores.put("id", categorias.get(i).getId());
                 valores.put("nome", categorias.get(i).getNome());
-                valores.put("colecao", categorias.get(i).getColecao().getId());
+                valores.put("colecao", categorias.get(i).getColecao());
 
                 db.insertOrThrow("categorias", null, valores);
 
@@ -193,7 +189,7 @@ public class Repository extends SQLiteOpenHelper {
 
             db.close();
         } catch (Exception e) {
-            Log.e("onInsert", e.getMessage());
+            Log.e("onInsert", "");
         }
 
     }
@@ -210,11 +206,7 @@ public class Repository extends SQLiteOpenHelper {
             Categorias categoria = new Categorias();
             categoria.setId(c.getInt(c.getColumnIndex("id")));
             categoria.setNome(c.getString(c.getColumnIndex("nome")));
-
-            Integer colecao1 = c.getInt(c.getColumnIndex("colecao"));
-            Colecoes colecao = this.getColecao(colecao1);
-
-            categoria.setColecao(colecao);
+            categoria.setColecao(c.getInt(c.getColumnIndex("colecao")));
 
             categorias.add(categoria);
         }
@@ -243,8 +235,8 @@ public class Repository extends SQLiteOpenHelper {
             musicas1.setNome(c.getString(c.getColumnIndex("nome")));
             musicas1.setNumero(c.getString(c.getColumnIndex("numero")));
             musicas1.setCategoria(c.getColumnIndex("categoria"));
-            musicas1.setLetra(c.getColumnIndex("letra"));
-            musicas1.setTom(c.getColumnIndex("tom"));
+            musicas1.setLetra(c.getString(c.getColumnIndex("letra")));
+            musicas1.setTom(c.getString(c.getColumnIndex("tom")));
             musicas.add(musicas1);
         }
 
@@ -296,16 +288,12 @@ public class Repository extends SQLiteOpenHelper {
             musicas1.setNome(c.getString(c.getColumnIndex("nome")));
             musicas1.setNumero(c.getString(c.getColumnIndex("numero")));
             musicas1.setCategoria(c.getColumnIndex("categoria"));
-            musicas1.setLetra(c.getColumnIndex("letra"));
-            musicas1.setTom(c.getColumnIndex("tom"));
+            musicas1.setLetra(c.getString(c.getColumnIndex("letra")));
+            musicas1.setTom(c.getString(c.getColumnIndex("tom")));
             musicas.add(musicas1);
         }
 
         c.close();
-
-        if (musicas.isEmpty()) {
-            return Void;
-        }
 
         return musicas.get(0);
 
