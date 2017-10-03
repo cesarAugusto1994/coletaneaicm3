@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Categorias;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Colecoes;
+import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musica;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musicas;
 import com.coletaneaicm.coletanea.coletaneaicm.R;
 import com.coletaneaicm.coletanea.coletaneaicm.Repositories.Repository;
@@ -69,6 +70,21 @@ public class MusicaActivity extends AppCompatActivity {
                         MusicasAdapter musicasAdapter = new MusicasAdapter(MusicaActivity.this, musicasList);
 
                         listaMusicas.setAdapter(musicasAdapter);
+
+                        listaMusicas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                                Intent goSingle = new Intent(MusicaActivity.this, SingleMusicaActivity.class);
+
+                                Musica musica = (Musica) parent.getItemAtPosition(position);
+
+                                goSingle.putExtra("musica", musica);
+
+                                startActivity(goSingle);
+
+                            }
+                        });
 
                     }
 

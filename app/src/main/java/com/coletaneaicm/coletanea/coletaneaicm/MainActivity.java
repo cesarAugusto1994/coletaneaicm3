@@ -26,6 +26,7 @@ import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musica;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musicas;
 import com.coletaneaicm.coletanea.coletaneaicm.Remotes.ImportData;
 import com.coletaneaicm.coletanea.coletaneaicm.Repositories.Repository;
+import com.coletaneaicm.coletanea.coletaneaicm.Session.SessionManager;
 import com.coletaneaicm.coletanea.coletaneaicm.retrofit.RetrofitInicializador;
 
 import java.util.ArrayList;
@@ -38,12 +39,18 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        session = new SessionManager(getApplicationContext());
+
+        session.checkLogin();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -249,7 +256,10 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "Está tudo Atualizado ;)", Toast.LENGTH_SHORT).show();
 
             */
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_sair) {
+
+            session.logoutUser();
+            finish();
 
         }
 

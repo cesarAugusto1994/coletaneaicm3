@@ -13,31 +13,19 @@ public class Login implements Serializable {
 
     private String classe;
 
-    private String mensagem;
+    private String msg;
 
-    private User user;
+    private Boolean acerto;
 
     public String getClasse() {
         return classe;
     }
 
-    public void setClasse(String classe) {
-        this.classe = classe;
+    public String getMsg() {
+        return msg;
     }
 
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(@Nullable User user) {
-        this.user = user;
+    public Boolean getAcerto() {
+        return acerto;
     }
 }

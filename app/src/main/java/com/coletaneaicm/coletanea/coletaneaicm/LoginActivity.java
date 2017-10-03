@@ -22,7 +22,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Config;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Login;
+import com.coletaneaicm.coletanea.coletaneaicm.Session.SessionManager;
 import com.coletaneaicm.coletanea.coletaneaicm.retrofit.RetrofitInicializador;
 
 import java.util.ArrayList;
@@ -77,10 +77,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private boolean loggedIn = false;
     private SharedPreferences.Editor editor;
 
+    SessionManager session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        session = new SessionManager(getApplicationContext());
+
+        if (session.isLoggedIn()) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences(com.coletaneaicm.coletanea.coletaneaicm.config.Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -120,6 +130,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (session.isLoggedIn()) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         SharedPreferences sharedPreferences = getSharedPreferences(com.coletaneaicm.coletanea.coletaneaicm.config.Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         loggedIn = sharedPreferences.getBoolean(com.coletaneaicm.coletanea.coletaneaicm.config.Config.LOGGEDIN_SHARED_PREF, false);
@@ -192,8 +209,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -235,13 +252,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     Login retorno = (Login) response.body();
 
-                    if (retorno.getClasse().toString() == Login.LOGIN_SUCESSO) {
+                    Log.i("onLoginResponse", "" + retorno.getClasse());
 
+                    if (retorno.getAcerto() == true) {
+
+                        session.createLoginSession(email, password);
 
                         Log.i("onLoginResponse", "" + retorno.getClasse());
-                        Log.i("onLoginResponse", "" + retorno.getMensagem());
+                        Log.i("onLoginResponse", "" + retorno.getMsg());
 
-                        Toast.makeText(LoginActivity.this, retorno.getMensagem(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra("login", retorno);
@@ -249,14 +269,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                         finish();
 
-
                     } else {
 
-
+                        Log.i("onLoginfailure", "" + call.request().toString());
                         Log.i("onLoginfailure", "" + retorno.getClasse());
-                        Log.i("onLoginfailure", "" + retorno.getMensagem());
+                        Log.i("onLoginfailure", "" + retorno.getMsg());
 
-                        Toast.makeText(LoginActivity.this, retorno.getMensagem(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
                     }
 
                 }
