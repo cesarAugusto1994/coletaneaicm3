@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Config;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -236,6 +237,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     if (retorno.getClasse().toString() == Login.LOGIN_SUCESSO) {
 
+
+                        Log.i("onLoginResponse", "" + retorno.getClasse());
+                        Log.i("onLoginResponse", "" + retorno.getMensagem());
+
                         Toast.makeText(LoginActivity.this, retorno.getMensagem(), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -246,6 +251,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
                     } else {
+
+
+                        Log.i("onLoginfailure", "" + retorno.getClasse());
+                        Log.i("onLoginfailure", "" + retorno.getMensagem());
+
                         Toast.makeText(LoginActivity.this, retorno.getMensagem(), Toast.LENGTH_SHORT).show();
                     }
 
@@ -254,7 +264,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onFailure(Call call, Throwable t) {
                     showProgress(false);
-                    Toast.makeText(LoginActivity.this, "Algo deu errado.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Algo deu errado. " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("onFailure", "Algo deu errado. " + t.getMessage());
                 }
             });
 
