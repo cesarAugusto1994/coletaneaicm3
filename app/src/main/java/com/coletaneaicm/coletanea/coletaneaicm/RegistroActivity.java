@@ -41,6 +41,9 @@ public class RegistroActivity extends AppCompatActivity {
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
 
+    boolean cancel = false;
+    View focusView = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,55 +52,54 @@ public class RegistroActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = RegistroActivity.this.getSharedPreferences(com.coletaneaicm.coletanea.coletaneaicm.config.Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-        Button btnSavaUser = (Button) findViewById(R.id.email_sign_in_button);
+        mNomeView = (AutoCompleteTextView) findViewById(R.id.registro_nome);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.registro_email);
+        mPasswordView = (EditText) findViewById(R.id.registro_password);
 
-        mNomeView = (AutoCompleteTextView) findViewById(R.id.nome);
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        mPasswordView = (EditText) findViewById(R.id.password);
+        Button btnSaveUser = (Button) findViewById(R.id.email_sign_up_button_2);
 
-        boolean cancel = false;
-        View focusView = null;
+        btnSaveUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        final String nome = mNomeView.getText().toString();
-        final String email = mEmailView.getText().toString();
-        final String password = mPasswordView.getText().toString();
+                final String nome = mNomeView.getText().toString();
+                final String email = mEmailView.getText().toString();
+                final String password = mPasswordView.getText().toString();
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+                // Check for a valid password, if the user entered one.
+                if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+                    mPasswordView.setError(getString(R.string.error_invalid_password));
+                    focusView = mPasswordView;
+                    cancel = true;
+                }
 
-        if (TextUtils.isEmpty(nome)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (TextUtils.isEmpty(password)) {
+                Log.i("Nome", "" + nome);
 
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
+                if (TextUtils.isEmpty(nome)) {
+                    mNomeView.setError(getString(R.string.error_field_required));
+                    focusView = mNomeView;
+                    cancel = true;
+                } else if (TextUtils.isEmpty(email)) {
+                    mEmailView.setError(getString(R.string.error_field_required));
+                    focusView = mEmailView;
+                    cancel = true;
+                } else if (TextUtils.isEmpty(password)) {
 
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
+                    mPasswordView.setError(getString(R.string.error_field_required));
+                    focusView = mPasswordView;
+                    cancel = true;
 
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
+                } else if (!isEmailValid(email)) {
+                    mEmailView.setError(getString(R.string.error_invalid_email));
+                    focusView = mEmailView;
+                    cancel = true;
+                }
 
-            btnSavaUser.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                if (cancel) {
+                    // There was an error; don't attempt login and focus the first
+                    // form field with an error.
+                    focusView.requestFocus();
+                } else {
 
                     Call<Registro> call = new RetrofitInicializador().getRegistroService().saveUser(nome, email, password);
 
@@ -107,49 +109,58 @@ public class RegistroActivity extends AppCompatActivity {
 
                             Registro resultado = (Registro) response.body();
 
-                            if (resultado.getBln()) {
-
-                                Call<Login> callLogin = new RetrofitInicializador().LoginService().getUser(email, password);
-
-                                callLogin.enqueue(new Callback<Login>() {
-                                    @Override
-                                    public void onResponse(Call<Login> call, Response<Login> response) {
-
-                                        Login retorno = (Login) response.body();
-
-                                        if (retorno.getAcerto() == true) {
-
-                                            session.createLoginSession(email, password);
-
-                                            Toast.makeText(RegistroActivity.this, "Logado com Sucesso", Toast.LENGTH_SHORT);
-
-                                            Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
-
-                                            startActivity(intent);
-
-                                            finish();
-
-                                        }else {
-                                            Toast.makeText(RegistroActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<Login> call, Throwable t) {
-                                        Toast.makeText(RegistroActivity.this, "Erro na tentativa de Login", Toast.LENGTH_SHORT).show();
-
-                                        Intent goLogin = new Intent(RegistroActivity.this, LoginActivity.class);
-                                        startActivity(goLogin);
-
-                                        finish();;
-
-                                    }
-                                });
-
-
+                            if (!response.isSuccessful()) {
+                                Log.i("Erro", "ERROR onResponde: " + response.errorBody().toString());
+                                Log.i("Erro", "ERROR onResponde: " + response.code());
                             } else {
-                                Toast.makeText(RegistroActivity.this, resultado.getMensagem(), Toast.LENGTH_SHORT);
+
+                                if (resultado.getBln()) {
+
+                                    Call<Login> callLogin = new RetrofitInicializador().LoginService().getUser(email, password);
+
+                                    callLogin.enqueue(new Callback<Login>() {
+                                        @Override
+                                        public void onResponse(Call<Login> call, Response<Login> response) {
+
+                                            Login retorno = (Login) response.body();
+
+                                            if (retorno.getAcerto() == true) {
+
+                                                session.createLoginSession(mEmailView.getText().toString(), mPasswordView.getText().toString());
+
+                                                Toast.makeText(RegistroActivity.this, "Logado com Sucesso", Toast.LENGTH_SHORT);
+
+                                                Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
+
+                                                startActivity(intent);
+
+                                                finish();
+
+                                            }else {
+                                                Toast.makeText(RegistroActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Login> call, Throwable t) {
+                                            Toast.makeText(RegistroActivity.this, "Erro na tentativa de Login", Toast.LENGTH_SHORT).show();
+
+                                            Intent goLogin = new Intent(RegistroActivity.this, LoginActivity.class);
+                                            startActivity(goLogin);
+
+                                            finish();;
+
+                                        }
+                                    });
+
+
+                                } else {
+                                    Toast.makeText(RegistroActivity.this, resultado.getMensagem(), Toast.LENGTH_SHORT);
+                                }
+
                             }
+
+
 
                         }
 
@@ -158,10 +169,12 @@ public class RegistroActivity extends AppCompatActivity {
                             Log.e("onFailure", " Erro ao Salva usuário " + t.getMessage());
                         }
                     });
-                }
-            });
 
-        }
+                }
+
+
+            }
+        });
 
     }
 
