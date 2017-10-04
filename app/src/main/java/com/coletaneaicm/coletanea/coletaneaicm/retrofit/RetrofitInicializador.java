@@ -6,6 +6,7 @@ import com.coletaneaicm.coletanea.coletaneaicm.services.FavoritosService;
 import com.coletaneaicm.coletanea.coletaneaicm.services.LoginService;
 import com.coletaneaicm.coletanea.coletaneaicm.services.MusicaService;
 import com.coletaneaicm.coletanea.coletaneaicm.services.MusicasService;
+import com.coletaneaicm.coletanea.coletaneaicm.services.RegistroService;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -45,6 +46,10 @@ public class RetrofitInicializador {
 
     public FavoritosService FavoritosService() {
         return retrofit.create(FavoritosService.class);
+    }
+
+    public RegistroService getRegistroService() {
+        return retrofit.create(RegistroService.class);
     }
 
 }
