@@ -77,7 +77,7 @@ public class MusicaActivity extends AppCompatActivity {
 
                                 Intent goSingle = new Intent(MusicaActivity.this, SingleMusicaActivity.class);
 
-                                Musica musica = (Musica) parent.getItemAtPosition(position);
+                                Musicas musica = (Musicas) parent.getItemAtPosition(position);
 
                                 goSingle.putExtra("musica", musica);
 
