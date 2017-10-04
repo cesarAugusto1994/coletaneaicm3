@@ -43,7 +43,12 @@
         <activity
             android:name=".SingleMusicaActivity"
             android:label="@string/title_activity_single_musica"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RegistroActivity"
+            android:label="@string/title_activity_registro"
+
+            android:theme="@style/Theme.Design.NoActionBar"></activity>
     </application>
 
 </manifest>

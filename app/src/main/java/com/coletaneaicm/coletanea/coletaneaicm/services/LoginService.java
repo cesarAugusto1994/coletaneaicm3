@@ -17,4 +17,7 @@ public interface LoginService {
     @GET("login/{email}/{password}")
     Call<Login> getUser(@Path("email") String email, @Path("password") String password);
 
+    @GET("user/{email}/data")
+    Call<Boolean> isUserSigned(@Path("email") String email);
+
 }

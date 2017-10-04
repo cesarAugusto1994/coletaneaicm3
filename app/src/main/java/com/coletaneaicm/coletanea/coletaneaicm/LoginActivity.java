@@ -38,6 +38,7 @@ import com.coletaneaicm.coletanea.coletaneaicm.Entities.Login;
 import com.coletaneaicm.coletanea.coletaneaicm.Session.SessionManager;
 import com.coletaneaicm.coletanea.coletaneaicm.retrofit.RetrofitInicializador;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,7 +105,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    try {
+                        attemptLogin();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     return true;
                 }
                 return false;
@@ -116,10 +121,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
 
-                //Intent goMain = new Intent(LoginActivity.this, MainActivity.class);
-                //startActivity(goMain);
+                try {
+                    attemptLogin();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
-                attemptLogin();
+        Button mEmailSignUpButton = (Button) findViewById(R.id.email_sign_up_button);
+        mEmailSignUpButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegistroActivity.class);
+
+                startActivity(intent);
             }
         });
 
@@ -199,7 +215,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptLogin() throws IOException {
         if (mAuthTask != null) {
             return;
         }
@@ -227,6 +243,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
+        } else if (TextUtils.isEmpty(password)) {
+
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
@@ -238,6 +260,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         } else {
+
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
@@ -252,29 +275,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     Login retorno = (Login) response.body();
 
-                    Log.i("onLoginResponse", "" + retorno.getClasse());
-
                     if (retorno.getAcerto() == true) {
 
                         session.createLoginSession(email, password);
 
-                        Log.i("onLoginResponse", "" + retorno.getClasse());
-                        Log.i("onLoginResponse", "" + retorno.getMsg());
-
-                        Toast.makeText(LoginActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Logado com Sucesso", Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra("login", retorno);
+                        intent.putExtra("email", email);
+
                         startActivity(intent);
 
                         finish();
 
                     } else {
-
-                        Log.i("onLoginfailure", "" + call.request().toString());
-                        Log.i("onLoginfailure", "" + retorno.getClasse());
-                        Log.i("onLoginfailure", "" + retorno.getMsg());
-
                         Toast.makeText(LoginActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
                     }
 
