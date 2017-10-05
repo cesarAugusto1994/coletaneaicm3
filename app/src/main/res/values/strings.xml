@@ -27,4 +27,7 @@
     <string name="title_activity_musica">Louvores</string>
     <string name="title_activity_single_musica">Louvor</string>
     <string name="title_activity_registro">Registre-se</string>
+
+    <string name="action_search">Search</string>
+    <string name="action_delete">Delete</string>
 </resources>

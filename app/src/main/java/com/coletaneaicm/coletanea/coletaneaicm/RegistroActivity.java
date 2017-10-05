@@ -1,6 +1,7 @@
 package com.coletaneaicm.coletanea.coletaneaicm;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,6 +53,8 @@ public class RegistroActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = RegistroActivity.this.getSharedPreferences(com.coletaneaicm.coletanea.coletaneaicm.config.Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
+        session = new SessionManager(getApplicationContext());
+
         mNomeView = (AutoCompleteTextView) findViewById(R.id.registro_nome);
         mEmailView = (AutoCompleteTextView) findViewById(R.id.registro_email);
         mPasswordView = (EditText) findViewById(R.id.registro_password);
@@ -101,6 +104,10 @@ public class RegistroActivity extends AppCompatActivity {
                     focusView.requestFocus();
                 } else {
 
+                    final ProgressDialog progressDialog = new ProgressDialog(RegistroActivity.this);
+                    progressDialog.setMessage("Registrando usuário");
+                    progressDialog.show();
+
                     Call<Registro> call = new RetrofitInicializador().getRegistroService().saveUser(nome, email, password);
 
                     call.enqueue(new Callback() {
@@ -109,12 +116,18 @@ public class RegistroActivity extends AppCompatActivity {
 
                             Registro resultado = (Registro) response.body();
 
+                            progressDialog.dismiss();
+
                             if (!response.isSuccessful()) {
                                 Log.i("Erro", "ERROR onResponde: " + response.errorBody().toString());
                                 Log.i("Erro", "ERROR onResponde: " + response.code());
                             } else {
 
                                 if (resultado.getBln()) {
+
+                                    final ProgressDialog progressDialogLogin = new ProgressDialog(RegistroActivity.this);
+                                    progressDialogLogin.setMessage("Registrando Login");
+                                    progressDialogLogin.show();
 
                                     Call<Login> callLogin = new RetrofitInicializador().LoginService().getUser(email, password);
 
@@ -124,25 +137,34 @@ public class RegistroActivity extends AppCompatActivity {
 
                                             Login retorno = (Login) response.body();
 
-                                            if (retorno.getAcerto() == true) {
+                                            progressDialogLogin.dismiss();
+
+                                            if (!response.isSuccessful()) {
+
+                                                Log.i("Erro", "ERROR onResponde: " + response.errorBody().toString());
+                                                Log.i("Erro", "ERROR onResponde: " + response.code());
+                                                Toast.makeText(RegistroActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
+
+                                            } else {
 
                                                 session.createLoginSession(mEmailView.getText().toString(), mPasswordView.getText().toString());
 
                                                 Toast.makeText(RegistroActivity.this, "Logado com Sucesso", Toast.LENGTH_SHORT);
 
-                                                Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
+                                                Intent intent = new Intent(RegistroActivity.this, LoginActivity.class);
 
                                                 startActivity(intent);
 
                                                 finish();
 
-                                            }else {
-                                                Toast.makeText(RegistroActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
                                             }
                                         }
 
                                         @Override
                                         public void onFailure(Call<Login> call, Throwable t) {
+
+                                            progressDialogLogin.dismiss();
+
                                             Toast.makeText(RegistroActivity.this, "Erro na tentativa de Login", Toast.LENGTH_SHORT).show();
 
                                             Intent goLogin = new Intent(RegistroActivity.this, LoginActivity.class);
@@ -166,6 +188,7 @@ public class RegistroActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call call, Throwable t) {
+                            progressDialog.dismiss();
                             Log.e("onFailure", " Erro ao Salva usuário " + t.getMessage());
                         }
                     });

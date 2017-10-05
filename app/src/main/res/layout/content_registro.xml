@@ -54,7 +54,6 @@
                     android:hint="@string/prompt_nome"
                     android:inputType="textPersonName"
                     android:maxLines="1"
-                    android:text="cesar"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -70,7 +69,6 @@
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:text="cesar@cesar.com"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -89,7 +87,6 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:text="123456"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
