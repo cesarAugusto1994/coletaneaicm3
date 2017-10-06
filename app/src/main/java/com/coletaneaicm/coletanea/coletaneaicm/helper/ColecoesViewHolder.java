@@ -15,6 +15,6 @@ public class ColecoesViewHolder extends RecyclerView.ViewHolder {
 
     public ColecoesViewHolder(View itemView) {
         super(itemView);
-        nome = (TextView) itemView.findViewById(R.id.colecao_nome_2);
+        nome = itemView.findViewById(R.id.colecao_nome_2);
     }
 }

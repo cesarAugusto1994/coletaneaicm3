@@ -25,6 +25,7 @@ import com.coletaneaicm.coletanea.coletaneaicm.retrofit.RetrofitInicializador;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,6 +33,9 @@ import retrofit2.Response;
 
 public class ColecoesActivity extends AppCompatActivity {
 
+    /**
+     *
+     */
     private RecyclerView recyclerView;
 
     @Override
@@ -66,11 +70,11 @@ public class ColecoesActivity extends AppCompatActivity {
 
         List<Colecoes> colecoes = repository.getColecoes();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_colecoes);
 
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ColecoesActivity.this, LinearLayoutManager.VERTICAL, true);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(linearLayoutManager );
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(new ColecoesAdapter(ColecoesActivity.this, colecoes));
 

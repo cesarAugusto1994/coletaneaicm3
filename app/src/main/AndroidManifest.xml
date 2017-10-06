@@ -50,7 +50,6 @@
         <activity
             android:name=".RegistroActivity"
             android:label="@string/title_activity_registro"
-
             android:theme="@style/Theme.Design.NoActionBar"></activity>
     </application>
 
