@@ -1,106 +1,53 @@
 package com.coletaneaicm.coletanea.coletaneaicm;
 
-import android.content.res.TypedArray;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Colecoes;
 import com.coletaneaicm.coletanea.coletaneaicm.Repositories.Repository;
+import com.coletaneaicm.coletanea.coletaneaicm.adapters.ColecaoAdapter;
 import com.coletaneaicm.coletanea.coletaneaicm.adapters.ColecoesAdapter;
-import com.coletaneaicm.coletanea.coletaneaicm.retrofit.RetrofitInicializador;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.Inflater;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ColecoesActivity extends AppCompatActivity {
-
-    /**
-     *
-     */
-    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_colecoes);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Repository repository = new Repository(this);
+        ArrayList<Colecoes> colecoes = (ArrayList<Colecoes>) repository.getColecoes();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        ListView listaColecoes = (ListView) findViewById(R.id.lista_colecoes);
+
+        ColecaoAdapter colecaoAdapter = new ColecaoAdapter(this, colecoes);
+
+        listaColecoes.setAdapter(colecaoAdapter);
+
+        listaColecoes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent goCategorias = new Intent(ColecoesActivity.this, CategoriasActivity.class);
+                Colecoes colecao = (Colecoes) adapterView.getItemAtPosition(i);
+                goCategorias.putExtra("colecao", colecao);
+
+                Log.i("onResponse", " "+ colecao.getNome());
+                startActivity(goCategorias);
             }
         });
 
-
-
-        this.getColecoes();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
-    /**
-     * Fetches mail messages by making HTTP request
-     * url: https://api.androidhive.info/json/inbox.json
-     */
-    private void getColecoes() {
-
-
-        Repository repository = new Repository(this);
-
-        List<Colecoes> colecoes = repository.getColecoes();
-
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_colecoes);
-
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ColecoesActivity.this, LinearLayoutManager.VERTICAL, true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(new ColecoesAdapter(ColecoesActivity.this, colecoes));
-
-
-        /*
-        Call<List<Colecoes>> call = new RetrofitInicializador().getColecoes().getColecoes();
-
-        call.enqueue(new Callback<List<Colecoes>>() {
-            @Override
-            public void onResponse(Call<List<Colecoes>> call, Response<List<Colecoes>> response) {
-
-                List<Colecoes> colecoes = response.body();
-
-                RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
-
-                final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ColecoesActivity.this);
-                recyclerView.setLayoutManager(linearLayoutManager );
-
-                //recyclerView.setAdapter(new ColecoesAdapter(ColecoesActivity.this, colecoes));
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Colecoes>> call, Throwable t) {
-
-            }
-        });*/
-    }
 }
