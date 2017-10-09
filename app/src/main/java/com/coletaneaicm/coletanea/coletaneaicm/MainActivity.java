@@ -3,6 +3,8 @@ package com.coletaneaicm.coletanea.coletaneaicm;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,13 +19,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Categorias;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Colecoes;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musica;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musicas;
+import com.coletaneaicm.coletanea.coletaneaicm.Entities.User;
 import com.coletaneaicm.coletanea.coletaneaicm.Remotes.ImportData;
 import com.coletaneaicm.coletanea.coletaneaicm.Repositories.Repository;
 import com.coletaneaicm.coletanea.coletaneaicm.Session.SessionManager;
@@ -40,11 +45,14 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     SessionManager session;
+    User user;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Em breve", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -69,6 +77,16 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //user = (User) getIntent().getSerializableExtra("user");
+
+        email = (String) getIntent().getStringExtra("user");
+
+        //Repository userRepo = new Repository(this);
+        //User user = userRepo.getUser(email);
+
+        //Log.i("user ", user.getNome());
+
     }
 
     @Override
@@ -97,7 +115,11 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+
+            Intent goPerfil = new Intent(MainActivity.this, PerfilActivity.class);
+            goPerfil.putExtra("user", this.user);
+            startActivity(goPerfil);
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -125,137 +147,6 @@ public class MainActivity extends AppCompatActivity
             ImportData importData = new ImportData(this);
             importData.run();
 
-            /*
-            final Repository repository = new Repository(this);
-
-            ArrayList<Colecoes> colecoes = (ArrayList<Colecoes>) repository.getColecoes();
-
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Baixando do servidor...");
-            ///progressDialog.setIndeterminate(false);
-            progressDialog.show();
-
-
-            if (colecoes.isEmpty()) {
-
-
-                Call<List<Colecoes>> call = new RetrofitInicializador().getColecoes().getColecoes();
-
-                call.enqueue(new Callback<List<Colecoes>>() {
-                    @Override
-                    public void onResponse(Call<List<Colecoes>> call, Response<List<Colecoes>> response) {
-
-                        ArrayList<Colecoes> colecoes = (ArrayList<Colecoes>) response.body();
-                        repository.criarColecao(colecoes);
-
-                        Log.i("onResponse", " Sucesso ao Salvar Colecoes");
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Colecoes>> call, Throwable t) {
-
-                        Log.e("onFailure", " Erro ao Salvar Colecoes: " + t.getMessage());
-
-                    }
-                });
-
-            }
-
-            for (int i = 0; i < colecoes.size(); i++) {
-
-                ArrayList<Categorias> categorias = (ArrayList<Categorias>) repository.getCategorias(colecoes.get(i));
-
-                if(categorias.isEmpty()) {
-
-                    Call<List<Categorias>> callCatetegorias = new RetrofitInicializador().getCategorias().getCategorias(colecoes.get(i).getId());
-
-                    callCatetegorias.enqueue(new Callback<List<Categorias>>() {
-                        @Override
-                        public void onResponse(Call<List<Categorias>> call, Response<List<Categorias>> response) {
-
-                            ArrayList<Categorias> categorias = (ArrayList<Categorias>) response.body();
-                            repository.criarCategoria(categorias);
-
-                            Log.i("onResponse", " Sucesso ao Salvar Categorias");
-/*
-                            for (int i = 0; i < categorias.size(); i++) {
-
-                                ArrayList<Musicas> musicas = (ArrayList<Musicas>) repository.getMusicas(categorias.get(i));
-
-                                if (musicas.isEmpty()) {
-
-                                    Call<List<Musicas>> callMusicas = new RetrofitInicializador().getMusicas().getMusicas(categorias.get(i).getId());
-
-                                    callMusicas.enqueue(new Callback<List<Musicas>>() {
-                                        @Override
-                                        public void onResponse(Call<List<Musicas>> call, Response<List<Musicas>> response) {
-
-                                            ArrayList<Musicas> musicas = (ArrayList<Musicas>) response.body();
-                                            repository.criarMusica(musicas);
-
-                                            Log.i("onResponse", " Sucesso ao Salvar Musicas");
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<List<Musicas>> call, Throwable t) {
-                                            Log.e("onFailure", " Erro ao Salvar Musicas: " + t.getMessage());
-                                        }
-                                    });
-
-                                }
-
-                            }                       
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<Categorias>> call, Throwable t) {
-                            Log.e("onFailure", " Erro ao Salvar categorias: " + t.getMessage());
-                        }
-                    });
-                }
-
-                ArrayList<Categorias> categoriasList = (ArrayList<Categorias>) repository.getCategorias(colecoes.get(i));
-
-                Log.i("onResponse", " " + categoriasList.size());
-
-                for (int i2 = 0; i2 < categoriasList.size(); i2++) {
-
-                    ArrayList<Musicas> musicas = (ArrayList<Musicas>) repository.getMusicas(categoriasList.get(i2));
-
-                    if (musicas.isEmpty()) {
-
-                        Call<List<Musicas>> callMusicas = new RetrofitInicializador().getMusicas().getMusicas(categoriasList.get(i2).getId());
-
-                        callMusicas.enqueue(new Callback<List<Musicas>>() {
-                            @Override
-                            public void onResponse(Call<List<Musicas>> call, Response<List<Musicas>> response) {
-
-                                ArrayList<Musicas> musicas = (ArrayList<Musicas>) response.body();
-                                repository.criarMusica(musicas);
-
-                                Log.i("onResponse", " Sucesso ao Salvar Musicas");
-                                progressDialog.dismiss();
-                            }
-
-                            @Override
-                            public void onFailure(Call<List<Musicas>> call, Throwable t) {
-                                Log.e("onFailure", " Erro ao Salvar Musicas: " + t.getMessage());
-                                progressDialog.dismiss();
-                            }
-                        });
-
-                    } else {
-                        progressDialog.dismiss();
-                    }
-                }
-                
-            }
-
-            progressDialog.dismiss();
-
-            Toast.makeText(MainActivity.this, "Está tudo Atualizado ;)", Toast.LENGTH_SHORT).show();
-
-            */
         } else if (id == R.id.nav_sair) {
 
             session.logoutUser();

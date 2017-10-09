@@ -10,6 +10,7 @@ import android.util.Log;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Categorias;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Colecoes;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musicas;
+import com.coletaneaicm.coletanea.coletaneaicm.Entities.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +24,16 @@ public class Repository extends SQLiteOpenHelper {
     private Context context;
 
     public Repository(Context context) {
-        super(context, "Coletanea", null, 3);
+        super(context, "Coletanea", null, 4);
         this.context = context;
         this.db = getReadableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        String sql_drop_user = "DROP TABLE IF EXISTS user;";
+        db.execSQL(sql_drop_user);
 
         String sql_drop = "DROP TABLE IF EXISTS colecoes;";
         db.execSQL(sql_drop);
@@ -39,6 +43,15 @@ public class Repository extends SQLiteOpenHelper {
 
         String sql_drop3 = "DROP TABLE IF EXISTS musicas;";
         db.execSQL(sql_drop3);
+
+        String sqlUser = "CREATE TABLE user (id INTEGER PRIMARY KEY, " +
+                "nome TEXT NOT NULL, " +
+                "avatar TEXT NULL, " +
+                "email TEXT NOT NULL, " +
+                "roles TEXT NULL, " +
+                "cidade TEXT NULL, " +
+                "uf TEXT NULL);";
+        db.execSQL(sqlUser);
 
         String sql = "CREATE TABLE colecoes (id INTEGER PRIMARY KEY, nome TEXT NOT NULL);";
         db.execSQL(sql);
@@ -50,6 +63,10 @@ public class Repository extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+
+        String sql_drop_user = "DROP TABLE IF EXISTS user;";
+        db.execSQL(sql_drop_user);
+
         String sql_drop = "DROP TABLE IF EXISTS colecoes;";
         db.execSQL(sql_drop);
 
@@ -60,6 +77,64 @@ public class Repository extends SQLiteOpenHelper {
         db.execSQL(sql_drop3);
 
         onCreate(db);
+    }
+
+    public User getUser(String email) {
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        List<User> users = new ArrayList<User>();
+
+        Cursor c = db.rawQuery("Select * from user where email = ? ", new String[] {email});
+
+        if (0 == c.getCount()) {
+            return null;
+        }
+
+        while(c.moveToNext()) {
+            User user = new User();
+            user.setId(c.getInt(c.getColumnIndex("id")));
+            user.setNome(c.getString(c.getColumnIndex("nome")));
+            user.setAvatar(c.getString(c.getColumnIndex("avatar")));
+            user.setEmail(c.getString(c.getColumnIndex("email")));
+            user.setRoles(c.getString(c.getColumnIndex("roles")));
+            user.setCidade(c.getString(c.getColumnIndex("cidade")));
+            user.setUf(c.getString(c.getColumnIndex("uf")));
+            users.add(user);
+        }
+
+        c.close();
+
+        if(users.isEmpty()) {
+            return null;
+        }
+
+
+        return users.get(0);
+    }
+
+    public void criarUsuario (User user)
+    {
+        SQLiteDatabase db = getWritableDatabase();
+
+        try {
+
+            ContentValues valores = new ContentValues();
+
+            valores.put("id", user.getId());
+            valores.put("nome", user.getNome());
+            valores.put("avatar", user.getAvatar());
+            valores.put("email", user.getEmail());
+            valores.put("roles", user.getRoles());
+            valores.put("cidade", user.getCidade());
+            valores.put("uf", user.getUf());
+
+            db.insertOrThrow("user", null, valores);
+
+            db.close();
+        } catch (Exception e) {
+
+        }
     }
 
     public List<Colecoes> getColecoes() {

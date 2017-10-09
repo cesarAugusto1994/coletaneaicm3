@@ -37,11 +37,13 @@ public class ColecoesActivity extends AppCompatActivity {
         listaColecoes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 Intent goCategorias = new Intent(ColecoesActivity.this, CategoriasActivity.class);
                 Colecoes colecao = (Colecoes) adapterView.getItemAtPosition(i);
                 goCategorias.putExtra("colecao", colecao);
 
                 Log.i("onResponse", " "+ colecao.getNome());
+
                 startActivity(goCategorias);
             }
         });

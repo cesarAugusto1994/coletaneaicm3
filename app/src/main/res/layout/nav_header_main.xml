@@ -16,9 +16,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/radiobutton_off_background" />
+        android:src="@android:drawable/ic_popup_reminder"
+        />
 
     <TextView
+        android:id="@+id/nome_usuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -26,7 +28,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/email_usuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name" />

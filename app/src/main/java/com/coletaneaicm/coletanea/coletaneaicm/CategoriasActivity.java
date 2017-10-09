@@ -77,6 +77,8 @@ public class CategoriasActivity extends AppCompatActivity {
 
                         Log.i("onResponse", " Sucesso ao Salvar Categorias");
 
+                        final ListView listaCategorias = (ListView) findViewById(R.id.lista_categorias);
+
                         CategoriasAdapter categoriasAdapter = new CategoriasAdapter(CategoriasActivity.this, categorias);
 
                         listaCategorias.setAdapter(categoriasAdapter);

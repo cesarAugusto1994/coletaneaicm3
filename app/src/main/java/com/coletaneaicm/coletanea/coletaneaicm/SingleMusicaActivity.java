@@ -40,7 +40,8 @@ public class SingleMusicaActivity extends AppCompatActivity {
         call.enqueue(new Callback<Musicas>() {
             @Override
             public void onResponse(Call<Musicas> call, Response<Musicas> response) {
-                Log.i("onResponse", " Sucesso ao encontrar musica");
+
+                Log.i("onResponse", " Sucesso ao encontrar musica " + call.request().url().toString());
 
                 Musicas song = response.body();
 

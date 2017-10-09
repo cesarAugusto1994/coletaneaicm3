@@ -2,6 +2,7 @@ package com.coletaneaicm.coletanea.coletaneaicm.services;
 
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Login;
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Musicas;
+import com.coletaneaicm.coletanea.coletaneaicm.Entities.User;
 
 import java.util.List;
 
@@ -19,5 +20,8 @@ public interface LoginService {
 
     @GET("user/{email}/data")
     Call<Boolean> isUserSigned(@Path("email") String email);
+
+    @GET("user/{email}/profile")
+    Call<User> getUserProfile(@Path("email") String email);
 
 }

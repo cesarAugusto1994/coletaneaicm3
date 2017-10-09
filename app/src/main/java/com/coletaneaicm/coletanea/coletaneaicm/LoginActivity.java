@@ -35,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coletaneaicm.coletanea.coletaneaicm.Entities.Login;
+import com.coletaneaicm.coletanea.coletaneaicm.Entities.User;
+import com.coletaneaicm.coletanea.coletaneaicm.Repositories.Repository;
 import com.coletaneaicm.coletanea.coletaneaicm.Session.SessionManager;
 import com.coletaneaicm.coletanea.coletaneaicm.retrofit.RetrofitInicializador;
 
@@ -79,6 +81,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private SharedPreferences.Editor editor;
 
     SessionManager session;
+
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,9 +289,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         intent.putExtra("login", retorno);
                         intent.putExtra("email", email);
 
-                        startActivity(intent);
+                        final Repository userRepo = new Repository(LoginActivity.this);
 
-                        finish();
+                            Call<User> loginService = new RetrofitInicializador().LoginService().getUserProfile(email);
+
+                            loginService.enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+
+                                    Log.i("onResponse", call.request().url().toString());
+                                    User userS = response.body();
+                                    userRepo.criarUsuario(userS);
+                                    user = userRepo.getUser(userS.getEmail());
+
+                                    Log.e("User Cadastro", user.getNome());
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+                                    Log.e("onFailure", "" + t.getMessage());
+                                }
+                            });
+
+
+
+                        intent.putExtra("user", user);
+
+                        Log.e("User", user.getNome());
+
+                        //startActivity(intent);
+
+                        //finish();
 
                     } else {
                         Toast.makeText(LoginActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
