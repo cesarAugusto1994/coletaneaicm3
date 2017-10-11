@@ -1,6 +1,8 @@
 package com.coletaneaicm.coletanea.coletaneaicm;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ import com.squareup.picasso.Picasso;
 public class PerfilActivity extends AppCompatActivity {
 
     User user;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +37,23 @@ public class PerfilActivity extends AppCompatActivity {
             }
         });
 
+
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(PerfilActivity.this);
+
+        String usuarioNome = prefs.getString("usuario_nome","");
+        String usuarioEmail = prefs.getString("usuario_email","");
+        String usuarioAvatar = prefs.getString("usuario_avatar","");
+        String usuarioCidade = prefs.getString("usuario_cidade","");
+        String usuarioUf = prefs.getString("usuario_uf","");
+
         TextView nomePerfil = (TextView) findViewById(R.id.nome_perfil);
         user = (User) getIntent().getSerializableExtra("user");
-        nomePerfil.setText(" cesar");
+        nomePerfil.setText(usuarioNome);
 
         ImageView foto_perfil = (ImageView) findViewById(R.id.foto_perfil);
 
-        Picasso.with(this).load("https://coletaneaicm.com/web/assets/blog/img/avatar/51497447b9ca6aa0a595a46d7216070f..jpg").into(foto_perfil);
+        Picasso.with(this).load(user.getAvatar()).into(foto_perfil);
     }
 
 }

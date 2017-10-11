@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -79,6 +80,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private boolean loggedIn = false;
     private SharedPreferences.Editor editor;
+
+    private SharedPreferences prefs;
 
     SessionManager session;
 
@@ -297,12 +300,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 @Override
                                 public void onResponse(Call<User> call, Response<User> response) {
 
-                                    Log.i("onResponse", call.request().url().toString());
                                     User userS = response.body();
                                     userRepo.criarUsuario(userS);
                                     user = userRepo.getUser(userS.getEmail());
 
-                                    Log.e("User Cadastro", user.getNome());
+
+                                    prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+
+                                    prefs.edit().putString("usuario_nome", user.getNome());
+                                    prefs.edit().putString("usuario_email", user.getEmail());
+                                    prefs.edit().putString("usuario_avatar", user.getAvatar());
+                                    prefs.edit().putString("usuario_cidade", user.getCidade());
+                                    prefs.edit().putString("usuario_uf", user.getUf());
+                                    prefs.edit().commit();
+
+                                    String usename = prefs.getString("usename","");
+                                    Log.e("onFailure", " " + usename);
 
                                 }
 
@@ -316,11 +329,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                         intent.putExtra("user", user);
 
-                        Log.e("User", user.getNome());
 
-                        //startActivity(intent);
 
-                        //finish();
+
+
+
+
+
+
+                        startActivity(intent);
+
+                        finish();
 
                     } else {
                         Toast.makeText(LoginActivity.this, retorno.getMsg(), Toast.LENGTH_SHORT).show();
@@ -336,8 +355,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             });
 
-            //mAuthTask = new UserLoginTask(email, password);
-            //mAuthTask.execute((Void) null);
         }
     }
 

@@ -3,9 +3,11 @@ package com.coletaneaicm.coletanea.coletaneaicm;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity
     User user;
     private String email;
 
+    private SharedPreferences prefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,14 +82,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //user = (User) getIntent().getSerializableExtra("user");
-
         email = (String) getIntent().getStringExtra("user");
 
-        //Repository userRepo = new Repository(this);
-        //User user = userRepo.getUser(email);
+        prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 
-        //Log.i("user ", user.getNome());
+        String usuarioNome = prefs.getString("usuario_nome","");
+        String usuarioEmail = prefs.getString("usuario_email","");
+        String usuarioAvatar = prefs.getString("usuario_avatar","");
+        String usuarioCidade = prefs.getString("usuario_cidade","");
+        String usuarioUf = prefs.getString("usuario_uf","");
+
+
 
     }
 
@@ -117,7 +124,14 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
 
             Intent goPerfil = new Intent(MainActivity.this, PerfilActivity.class);
-            goPerfil.putExtra("user", this.user);
+
+            String usuarioEmail = prefs.getString("usuario_email","");
+
+            Repository userRepo = new Repository(this);
+
+            User user = userRepo.getUser(usuarioEmail);
+
+            goPerfil.putExtra("user", user);
             startActivity(goPerfil);
 
         }
